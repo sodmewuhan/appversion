@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <body>
+        <h1>APP版本文件上传</h1>
+        <form method="POST" action="/upload" enctype="multipart/form-data">
+            <input type="file" name="file" /><br/><br/>
+            <label>版本描述</label> <input type="text" name="desc" /><br/><br/>
+            <label>版本号</label> <input type="text" name="appversion" /><br/><br/>
+            <input type="submit" value="Submit" />
+        </form>
+    </body>
+</html>

@@ -1,0 +1,37 @@
+server:
+  port: 8012
+
+spring:
+  http:
+    multipart:
+      maxFileSize:  50Mb     #单个文件最大
+      maxRequestSize: 50Mb   #单次请求最大
+  #mysql 数据库
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    platform: mysql
+    url:  jdbc:mysql://101.37.146.78:3306/datasensorn?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: hello123456
+    initialSize: 5
+    minIdle: 5
+    maxActive: 30
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    filters: stat,wall,log4j
+    logSlowSql: true
+
+## 该配置节点为独立的节点，有很多同学容易将这个配置放在spring的节点下，导致配置无法被识别
+mybatis:
+  mapper-locations: classpath:mapping/*.xml  #注意：一定要对应mapper映射xml文件的所在路径
+  type-aliases-package: com.datasensor.fish.appversion.model  # 注意：对应实体类的路径
+
+application:
+  storeFilePath: /usr/local/appversion
