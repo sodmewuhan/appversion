@@ -2,6 +2,7 @@ package com.datasensor.fish.appversion.service.impl;
 
 import com.datasensor.fish.appversion.configure.ServiceConfigure;
 import com.datasensor.fish.appversion.exception.ServiceException;
+import com.datasensor.fish.appversion.model.AppVersionInfo;
 import com.datasensor.fish.appversion.model.mapper.AppVersionInfoMapper;
 import com.datasensor.fish.appversion.service.api.ServiceUploadApp;
 import org.slf4j.Logger;
@@ -11,11 +12,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Date;
 
 @Service
 public class ServiceUploadAppImpl implements ServiceUploadApp {
@@ -29,7 +32,7 @@ public class ServiceUploadAppImpl implements ServiceUploadApp {
     @Autowired
     private ServiceConfigure serviceConfigure;
 
-    public boolean uploadAppFile(MultipartFile file, String desc) throws ServiceException {
+    public boolean uploadAppFile(MultipartFile file, String desc,String version) throws ServiceException {
 
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         try {
@@ -42,11 +45,24 @@ public class ServiceUploadAppImpl implements ServiceUploadApp {
                         "Cannot store file with relative path outside current directory "
                                 + filename);
             }
+            if (!checkVersion(version)) {
+                throw new ServiceException(
+                        "Cannot store file with relative path outside current directory "
+                                + filename);
+            }
             try (InputStream inputStream = file.getInputStream()) {
-                String storeFilePath = serviceConfigure.getStoreFilePath();
+                // save file to disk
+                String storeFilePath = buildStorePath(version);
                 Path rootLocation = Paths.get(storeFilePath);
                 Files.copy(inputStream, rootLocation.resolve(filename),
                         StandardCopyOption.REPLACE_EXISTING);
+                logger.info("the file "+filename + " save to " + rootLocation.resolve(filename));
+                // save to db
+                AppVersionInfo versionInfo = new AppVersionInfo();
+                versionInfo.setAppdesc(desc);
+                versionInfo.setAppversion(version);
+                versionInfo.setDownloadurl(rootLocation.resolve(filename).toString());
+                appVersionInfoMapper.insert(versionInfo);
             }
         }
         catch (Exception e) {
@@ -55,8 +71,18 @@ public class ServiceUploadAppImpl implements ServiceUploadApp {
         return true;
     }
 
+    private boolean checkVersion(String version) {
+        AppVersionInfo appVersionInfo = appVersionInfoMapper.getAppinfoByVersion(version);
+        return (appVersionInfo==null) ? true : false;
+    }
+
     // 得到需要保存的路径
-    private String BuildStorePath() {
-        return org.apache.commons.lang3.StringUtils.EMPTY;
+    private String buildStorePath(String version) {
+        String storeFilePath = serviceConfigure.getStoreFilePath() + "/" + version;
+        File dirFile = new File(storeFilePath);
+        if (!dirFile.exists()) {
+            dirFile.mkdir();
+        }
+        return storeFilePath;
     }
 }

@@ -24,7 +24,7 @@
   <insert id="insert" parameterType="com.datasensor.fish.appversion.model.AppVersionInfo" >
     insert into t_box_appversion (ID, APPVERSION, UPDATETIME, 
       APPDESC, DOWNLOADURL)
-    values (#{id,jdbcType=INTEGER}, #{appversion,jdbcType=VARCHAR}, #{updatetime,jdbcType=TIMESTAMP}, 
+    values (#{id,jdbcType=INTEGER}, #{appversion,jdbcType=VARCHAR}, now(),
       #{appdesc,jdbcType=VARCHAR}, #{downloadurl,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.datasensor.fish.appversion.model.AppVersionInfo" >
@@ -85,9 +85,24 @@
   <update id="updateByPrimaryKey" parameterType="com.datasensor.fish.appversion.model.AppVersionInfo" >
     update t_box_appversion
     set APPVERSION = #{appversion,jdbcType=VARCHAR},
-      UPDATETIME = #{updatetime,jdbcType=TIMESTAMP},
+      UPDATETIME = now(),
       APPDESC = #{appdesc,jdbcType=VARCHAR},
       DOWNLOADURL = #{downloadurl,jdbcType=VARCHAR}
     where ID = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="getLastVersion" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_box_appversion
+    order by UPDATETIME desc
+    LIMIT 1;
+  </select>
+
+  <select id="getAppinfoByVersion" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select
+    <include refid="Base_Column_List" />
+    FROM t_box_appversion
+    where appversion = #{appversion,jdbcType=VARCHAR}
+  </select>
 </mapper>

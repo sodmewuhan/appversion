@@ -1,5 +1,6 @@
 server:
   port: 8012
+  contextPath:  /appversion
 
 spring:
   http:
@@ -34,4 +35,6 @@ mybatis:
   type-aliases-package: com.datasensor.fish.appversion.model  # 注意：对应实体类的路径
 
 application:
+#  storeFilePath: F:\\tmp
   storeFilePath: /usr/local/appversion
+  base-packages:  com.datasensor.fish.appversion
