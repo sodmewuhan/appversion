@@ -17,7 +17,7 @@ public class AjaxDomainFilter implements Filter {
 
         HttpServletResponse httpResponse = (HttpServletResponse)response;
         httpResponse.setHeader("Access-Control-Allow-Origin", "*");//设置允许哪些域名应用进行ajax访问
-        httpResponse.setHeader("Access-Control-Allow-Methods", "PUT,POST,DELETE");
+        httpResponse.setHeader("Access-Control-Allow-Methods", "PUT,POST,DELETE,GET");
         httpResponse.setHeader("Access-Control-Allow-Headers", "Content-Type");
 //
         chain.doFilter(request, response);//调用后续serlvet

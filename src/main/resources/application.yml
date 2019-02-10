@@ -1,12 +1,18 @@
 server:
   port: 8012
-  contextPath:  /appversion
+#  contextPath:  /appversion
 
 spring:
   http:
     multipart:
       maxFileSize:  50Mb     #单个文件最大
       maxRequestSize: 50Mb   #单次请求最大
+  thymeleaf:
+    #prefix: classpath:/templates/
+    #suffix: .html
+    cache:  false
+    #content-type: text/htm
+    #mode: HTML5
   #mysql 数据库
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
@@ -35,6 +41,6 @@ mybatis:
   type-aliases-package: com.datasensor.fish.appversion.model  # 注意：对应实体类的路径
 
 application:
-#  storeFilePath: F:\\tmp
+  imagesPath: F:\\tmp
   storeFilePath: /usr/local/appversion
   base-packages:  com.datasensor.fish.appversion

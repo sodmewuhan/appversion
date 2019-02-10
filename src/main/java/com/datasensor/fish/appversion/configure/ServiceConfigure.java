@@ -11,4 +11,6 @@ public class ServiceConfigure {
     @Value( "${application.storeFilePath}" )
     private String storeFilePath;
 
+    @Value( "${application.imagesPath}" )
+    private String imagesPath;
 }
