@@ -41,6 +41,6 @@ mybatis:
   type-aliases-package: com.datasensor.fish.appversion.model  # 注意：对应实体类的路径
 
 application:
-  imagesPath: F:\\tmp
+  imagesPath: /usr/local/appversion/headface
   storeFilePath: /usr/local/appversion
   base-packages:  com.datasensor.fish.appversion

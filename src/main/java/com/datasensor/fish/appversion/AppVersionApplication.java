@@ -1,22 +1,22 @@
 package com.datasensor.fish.appversion;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import javax.servlet.MultipartConfigElement;
+
 @SpringBootApplication
-@EnableAutoConfiguration
 @EnableScheduling
 @ServletComponentScan
 @EnableAsync(proxyTargetClass = true)
-@ComponentScan( basePackages = "${application.base-packages}" )
-
+//@ComponentScan( basePackages = "${application.base-packages}" )
 public class AppVersionApplication extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
@@ -26,6 +26,14 @@ public class AppVersionApplication extends SpringBootServletInitializer {
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
 		return builder.sources(AppVersionApplication.class);
+	}
+
+	@Bean
+	public MultipartConfigElement multipartConfigElement() {
+		MultipartConfigFactory config = new MultipartConfigFactory();
+		config.setMaxFileSize("200MB");
+		config.setMaxRequestSize("200MB");
+		return config.createMultipartConfig();
 	}
 
 	//Tomcat large file upload connection reset  支持tomcat的大文件上传
